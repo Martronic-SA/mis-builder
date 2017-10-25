@@ -366,6 +366,18 @@ class MisReportInstance(models.Model):
             _company_default_get('mis.report.instance').id
         return default_company_id
 
+    @api.multi
+    def _compute_company_ids(self):
+        for record in self:
+            if record.multi_company and not record.company_ids:
+                user_company_id = self.env.user.company_id.id
+                record.computed_company_ids = self.env['res.company'].search(
+                        [('id','child_of',user_company_id)])
+            elif record.company_ids:
+                record.computed_company_ids = record.company_ids
+            else:
+                record.computed_company_ids = record.company_id
+
     _name = 'mis.report.instance'
 
     name = fields.Char(required=True,
@@ -406,8 +418,11 @@ class MisReportInstance(models.Model):
         comodel_name='res.company',
         string='Companies',
         help="Select companies for which data will be searched.",
-        required=True,
     )
+    computed_company_ids = fields.Many2many(
+        comodel_name='res.company',
+        string='Computed Companies',
+        compute='_compute_company_ids')
     currency_id = fields.Many2one(
         comodel_name='res.currency',
         string='Currency',
@@ -643,7 +658,7 @@ class MisReportInstance(models.Model):
         """
         self.ensure_one()
         aep = self.report_id._prepare_aep(
-            self.company_ids or self.company_id, self.currency_id)
+            self.computed_company_ids, self.currency_id)
         kpi_matrix = self.report_id.prepare_kpi_matrix()
         for period in self.period_ids:
             description = None
@@ -674,7 +689,7 @@ class MisReportInstance(models.Model):
         account_id = arg.get('account_id')
         if period_id and expr and AEP.has_account_var(expr):
             period = self.env['mis.report.instance.period'].browse(period_id)
-            aep = AEP(self.company_ids or self.company_id, self.currency_id)
+            aep = AEP(self.computed_company_ids, self.currency_id)
             aep.parse_expr(expr)
             aep.done_parsing()
             domain = aep.get_aml_domain_for_expr(
