@@ -733,6 +733,7 @@ class MisReportInstance(models.Model):
         aep = self.report_id._prepare_aep(
             self.query_company_ids, self.currency_id)
         kpi_matrix = self.report_id.prepare_kpi_matrix()
+        kpi_matrix.currency_id = self.currency_id.id
         for period in self.period_ids:
             description = None
             if period.mode == MODE_NONE:
