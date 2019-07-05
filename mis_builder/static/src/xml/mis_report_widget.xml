@@ -7,6 +7,61 @@
                 <div>
                     <div class="oe_mis_builder_analytic_filter_box oe_left" style="position: relative; display: inline-block;"/>
                     <div class="oe_mis_builder_buttons oe_right oe_button_box">
+                        <div class="o_search_options oe_left dates" t-if="widget.use_automatic_periods">
+                            <div class="dropdown o_mis_reports_date-filter">
+                                <button type="button" class="dropdown-toggle btn btn-sm" data-toggle="dropdown">
+                                    <span class="fa fa-calendar"/>
+                                    <t t-if="widget.period == 'custom'">Date:</t>
+                                    <t t-if="widget.period != 'custom'">Period:</t>
+                                    <t t-if="widget.period == 'last_month'">Last Month</t>
+                                    <t t-if="widget.period == 'last_year'">Last Year</t>
+                                    <t t-if="widget.period == 'current_year'">Current Year</t>
+                                    <t t-if="widget.period == 'current_month'">Current Month</t>
+                                    <t t-if="widget.period == 'custom'">Custom</t>
+                                    <span class="caret"/>
+                                </button>
+                                <ul class="dropdown-menu o_filters_menu" role="menu">
+                                    <t>
+                                        <li title="Current Year" data-value="current_year" t-att-class="'o_mis_reports_one-filter ' + (widget.period == 'current_year' and 'selected' or '')"><a>Current Year</a></li>
+                                        <li title="Last Year" data-value="last_year" t-att-class="'o_mis_reports_one-filter ' + (widget.period == 'last_year' and 'selected' or '')"><a>Last Year</a></li>
+                                        <li title="Current Month" data-value="current_month" t-att-class="'o_mis_reports_one-filter ' + (widget.period == 'current_month' and 'selected' or '')"><a>Current Month</a></li>
+                                        <li title="Last Month" data-value="last_month" t-att-class="'o_mis_reports_one-filter ' + (widget.period == 'last_month' and 'selected' or '')"><a>Last Month</a></li>
+                                    </t>
+                                    <li class="divider"></li>
+                                    <li t-att-class="'o_mis_reports_use-custom ' + (widget.period == 'custom' and 'o_open_menu' or 'o_closed_menu')"><a class="custom_dates">Custom</a></li>
+                                    <li t-att-class="'o_mis_reports_custom-dates '+ (widget.period !='custom' and 'hidden' or '')" data-value='custom' style='margin-left: 10px; margin-right: 10px;'>
+                                        <label class="custom-date" for="date_from">Start Date :</label>
+                                        <div class='o_datepicker date o_mis_reports_datetimepicker' t-att-data-default-value="widget.date_from">
+                                            <input type='text' class="o_datepicker_input" name="date_from" t-att-data-default-value="widget.date_from"/>
+                                            <span class="o_datepicker_button"/>
+                                        </div>
+                                        <label class="custom-date" for="date_to">End Date :</label>
+                                        <div class="form-group custom-date">
+                                            <div class='o_datepicker date o_mis_reports_datetimepicker' t-att-data-default-value="widget.date_to">
+                                                <input type='text' class="o_datepicker_input" name="date_to" t-att-data-default-value="widget.date_to"/>
+                                                <span class="o_datepicker_button"/>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-primary o_mis_reports_one-filter">Apply</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="o_search_options oe_left periods" t-if="widget.use_automatic_periods">
+                            <div class="dropdown o_mis_reports-filter-subdivision">
+                                <button type="button" class="dropdown-toggle btn btn-sm" data-toggle="dropdown">
+                                    <span class="fa fa-columns"/> Subdivision: <t t-esc="widget.subdivision"/> <span class="caret"/>
+                                </button>
+                                <ul class="dropdown-menu o_filters_menu" role="menu">
+                                    <li t-att-title="No" data-value="no" t-att-class="'mis-report-subdivision ' + ((widget.subdivision == 'no') and 'selected' or '')"><a>No</a></li>
+                                    <li t-att-title="Week" data-value="week" t-att-class="'mis-report-subdivision ' + ((widget.subdivision == 'week') and 'selected' or '')"><a>Week</a></li>
+                                    <li t-att-title="Month" data-value="month" t-att-class="'mis-report-subdivision ' + ((widget.subdivision == 'month') and 'selected' or '')"><a>Month</a></li>
+                                    <li t-att-title="3 Months" data-value="month3" t-att-class="'mis-report-subdivision ' + ((widget.subdivision == 'month3') and 'selected' or '')"><a>3 Months</a></li>
+                                    <li t-att-title="6 Months" data-value="month6" t-att-class="'mis-report-subdivision ' + ((widget.subdivision == 'month6') and 'selected' or '')"><a>6 Months</a></li>
+                                    <li t-att-title="Year" data-value="year" t-att-class="'mis-report-subdivision ' + ((widget.subdivision == 'year') and 'selected' or '')"><a>Year</a></li>
+                                </ul>
+                            </div>
+                        </div>
                         <button class="oe_mis_builder_refresh btn btn-sm oe_button"><span class="fa fa-refresh"/> Refresh</button>
                         <button class="oe_mis_builder_print btn btn-sm oe_button"><span class="fa fa-print"/> Print</button>
                         <button class="oe_mis_builder_export btn btn-sm oe_button"><span class="fa fa-download"/> Export</button>
